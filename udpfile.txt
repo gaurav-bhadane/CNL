@@ -1,40 +1,64 @@
-import java.net.*;
-import java.io.*;
-public class udpfiletransferserver
-{
-            public static void main(String args[])throws IOException
-            {
-                        byte b[]=new byte[3072];
-                        DatagramSocket dsoc=new DatagramSocket(1000);
-                        FileOutputStream f=new FileOutputStream("f1.txt");
-                        while(true)
-                        {
-                               DatagramPacket dp=new DatagramPacket(b,b.length);
-                               dsoc.receive(dp);
-                              System.out.println(new String (dp.getData() ,0, dp. getLength()  ) );
+import java.io.FileInputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
-                        }
+public class UDPClient {
+    public static void main(String[] args) {
+        try {
+            DatagramSocket socket = new DatagramSocket();
+
+            InetAddress serverAddress = InetAddress.getByName("localhost"); // Change to the server's IP address
+
+            FileInputStream fileInputStream = new FileInputStream("filetosend.txt");
+            byte[] sendData = new byte[1024];
+            int bytesRead;
+
+            while ((bytesRead = fileInputStream.read(sendData)) != -1) {
+                DatagramPacket sendPacket = new DatagramPacket(sendData, bytesRead, serverAddress, 9876);
+                socket.send(sendPacket); // Send the data
             }
+
+            fileInputStream.close();
+            socket.close();
+
+            System.out.println("File sent successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 
-import java.io.*;
-import java.net.*;
-public class udpfiletransclient
-{
-            public static void main(String args[])throws Exception
-            {
-                        byte b[]=new byte[1024];
-                        FileInputStream f=new FileInputStream("filetosend.txt");
-                        DatagramSocket dsoc=new DatagramSocket(2000);
-                        int i=0;
-                        while(f.available()!=0)
-                        {
-                                    b[i]=(byte)f.read();
-                                    i++;
-                        }
-                       f.close();
-                       dsoc.send(new DatagramPacket(b,i,InetAddress.getLocalHost(),1000));
-            }
 
-}
+import java.io.FileOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.io.IOException;
+
+public class UDPServer {
+    public static void main(String[] args) {
+        try {
+            DatagramSocket socket = new DatagramSocket(9876); // Create a UDP socket on port 9876
+
+            byte[] receiveData = new byte[1024];
+
+            while (true) {
+                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+                socket.receive(receivePacket); // Receive the data
+
+                byte[] fileData = receivePacket.getData();
+                int dataLength = receivePacket.getLength();
+
+                // Save the received data to a file
+                FileOutputStream fileOutputStream = new FileOutputStream("received_file.txt");
+                fileOutputStream.write(fileData, 0, dataLength);
+                fileOutputStream.close();
+
+                System.out.println("File received and saved as received_file.txt");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}  
