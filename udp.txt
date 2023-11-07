@@ -1,0 +1,46 @@
+import java.net.*;
+class UDPServer
+{
+public static void main(String [] args) throws Exception
+{
+//creates UDP service on port 7500
+DatagramSocket ds = new DatagramSocket(7500);
+System.out.println("UDP server console");
+while(true)
+{
+//create buffer for receiving data
+byte [] b = new byte[100];
+//create receiving packet
+DatagramPacket dp = new DatagramPacket(b,b.length);
+System.out.println("Waiting for packet");
+ds.receive(dp);
+b = dp.getData();
+String str = new String(b);
+System.out.println(str);
+}
+}
+}
+
+import java.net.*;
+import java.util.*;
+class UDPClient
+{
+public static void main(String [] args) throws Exception
+{
+DatagramSocket ds = new DatagramSocket();
+boolean done =false;
+while(!done)
+{
+Scanner in = new Scanner(System.in);
+System.out.println("Enter the string ");
+String str = in.nextLine();
+if(str.equals("BYE"))
+done = true;
+byte [] b = str.getBytes();
+DatagramPacket dp = new DatagramPacket(b,b.length,
+InetAddress.getLocalHost(),7500);
+ds.send(dp);
+System.out.println("Data sended to server ");
+}
+}
+}
