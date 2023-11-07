@@ -1,0 +1,54 @@
+import java.net.*;
+import java.io.*;
+import java.util.*;
+
+public class myserver{
+
+public static void main(String[]args)throws Exception{
+	ServerSocket ss = new ServerSocket(5678);
+	 Socket s = ss.accept();
+	   InputStream is  = s.getInputStream();
+	  FileOutputStream fos = new FileOutputStream("filereceived.txt");
+
+
+
+	  byte[]b = new byte[1024];
+	  int bytesRead;
+	  while((bytesRead=is.read(b))!=-1){
+		  fos.write(b,0,bytesRead);
+	  }
+	  System.out.println("File Recieved !");
+
+	  fos.close();
+	  is.close();
+	  ss.close();
+
+	}
+}
+
+import java.net.*;
+import java.io.*;
+import java.util.*;
+
+public class myclient{
+
+public static void main(String[]args)throws Exception{
+	 Socket s = new Socket("localhost",5678);
+	  File file = new File("filetosend.txt");
+	  FileInputStream fin = new FileInputStream(file);
+
+	  OutputStream os  = s.getOutputStream();
+
+	  byte[]b = new byte[1024];
+	  int bytesRead;
+	  while((bytesRead=fin.read(b))!=-1){
+		  os.write(b,0,bytesRead);
+	  }
+	  System.out.println("File Sent");
+
+	  fin.close();
+	  os.close();
+	  s.close();
+
+	}
+}
