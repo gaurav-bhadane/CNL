@@ -28,8 +28,7 @@
 
 12. Installing and configuring DHCP server and assign IP addresses to client machines using DHCP server using Cisco packet tracer
 
-13. Write a program for DNS lookup. Given an IP address input, it should
-return URL and viceversa
+13. Write a program for DNS lookup. Given an IP address input, it should return URL and viceversa
 
 
 14. Capture packets using Wireshark and accomplish the following andsave the output in file:
