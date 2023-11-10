@@ -1,4 +1,4 @@
-# CNL
+# SPPU TE AI&DS CNL
 
 1. Demonstrate the different types of topologies and types of transmission media by using a packet tracer tool:
             1. Star Topology
